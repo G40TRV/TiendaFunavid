@@ -22,6 +22,7 @@ export const Navbar = ({ children }) => {
                         <Link to="/" className="font-semibold text-slate-600 hover:text-cyan-600 transition-colors">Inicio</Link>
                         <Link to="/about" className="font-semibold text-slate-600 hover:text-cyan-600 transition-colors">Sobre Nosotros</Link>
                         <Link to="/voluntario" className="font-semibold text-slate-600 hover:text-cyan-600 transition-colors">Voluntariado</Link>
+                        <a href="https://www.funavid.org/" target="_blank" rel="noopener noreferrer" className="font-semibold text-slate-600 hover:text-cyan-600 transition-colors">Pagina oficial</a>
                     </nav>
 
                     {/* botones y acciones */}
