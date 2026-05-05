@@ -1,0 +1,67 @@
+﻿/* esta es el css de estilos del formulario de login */
+
+/* fondo y centrado de la pagina de login */
+.login-page {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+/* caja de formulario */
+.login-box {
+    background: white;
+    padding: 40px;
+    width: 350px;
+    border-radius: 12px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+/* titulo del formulario */
+.login-box h1 {
+    margin-bottom: 20px;
+}
+
+/* formulario */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/*inputs*/
+.login-form input {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.login-form input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+/* boton de login */
+.login-form button {
+    padding: 12px;
+    border: none;
+    background: #667eea;
+    color: white;
+    font-size: 15px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.login-form button:hover {
+    background: #5563d6;
+}
+
+/* mensaje de error*/
+.error {
+    margin-top: 10px;
+    color: red;
+    font-size: 14px;
+}
