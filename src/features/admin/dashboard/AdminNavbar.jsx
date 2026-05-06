@@ -1,4 +1,4 @@
-﻿import { RiLogoutBoxRLine, RiDashboardLine } from '@remixicon/react'
+import { RiLogoutBoxRLine, RiDashboardLine } from '@remixicon/react'
 import { Link } from 'react-router-dom';
 
 export const AdminNavbar = ({ logout, children }) => {
@@ -18,9 +18,11 @@ export const AdminNavbar = ({ logout, children }) => {
 
                     {/* Links de NavegaciÃ³n */}
                     <nav className="hidden md:flex gap-6">
-                        <Link to="/admin" className="font-semibold text-blue-500 hover:opacity-80 transition-opacity">Dashboard</Link>
+                        <Link to="/admin" className="font-semibold text-slate-400 hover:text-blue-400 transition-colors">Dashboard</Link>
                         <Link to="/admin/products" className="font-semibold text-slate-400 hover:text-blue-400 transition-colors">Gestionar Productos</Link>
                         <Link to="/admin/add-product" className="font-semibold text-slate-400 hover:text-blue-400 transition-colors">Agregar Productos</Link>
+                        <Link to="/admin/payments" className="font-semibold text-slate-400 hover:text-blue-400 transition-colors">Verificar Pagos</Link>
+                        <Link to="/admin/history" className="font-semibold text-slate-400 hover:text-emerald-400 transition-colors">Historial Verificados</Link>
                     </nav>
 
                     {/* botones y acciones */}

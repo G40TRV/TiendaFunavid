@@ -1,7 +1,27 @@
-﻿import { RiArrowLeftLine, RiSecurePaymentLine } from '@remixicon/react'
+import { useState } from 'preact/hooks'
+import { RiArrowLeftLine, RiSecurePaymentLine } from '@remixicon/react'
 
 //Checkout: esta pagina muestra el resumen de los productos aÃ±adidos al carrito.
 export const Checkout = ({ allProducts, total, onProceedToPayment, onBack }) => {
+    const [customerData, setCustomerData] = useState({
+        name: '',
+        address: '',
+        phone: ''
+    });
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setCustomerData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleProceed = () => {
+        if (!customerData.name || !customerData.address || !customerData.phone) {
+            alert("Por favor completa todos los datos de envÃ­o.");
+            return;
+        }
+        onProceedToPayment(customerData);
+    };
+
     return (
         <div className="min-h-screen bg-slate-50 pt-28 pb-20 px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl mx-auto">
@@ -46,15 +66,35 @@ export const Checkout = ({ allProducts, total, onProceedToPayment, onBack }) => 
                     <div className="bg-cyan-50 border border-cyan-100 rounded-2xl p-6 mb-8">
                         <h3 className="font-bold text-cyan-900 mb-4">Datos de envÃ­o</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <input type="text" placeholder="Nombre completo" className="w-full px-4 py-3 rounded-xl border border-cyan-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 bg-white" />
-                            <input type="text" placeholder="DirecciÃ³n de entrega" className="w-full px-4 py-3 rounded-xl border border-cyan-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 bg-white" />
-                            <input type="text" placeholder="Ciudad" className="w-full px-4 py-3 rounded-xl border border-cyan-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 bg-white" />
-                            <input type="text" placeholder="TelÃ©fono" className="w-full px-4 py-3 rounded-xl border border-cyan-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 bg-white" />
+                            <input 
+                                type="text" 
+                                name="name"
+                                value={customerData.name}
+                                onChange={handleChange}
+                                placeholder="Nombre completo" 
+                                className="w-full px-4 py-3 rounded-xl border border-cyan-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 bg-white" 
+                            />
+                            <input 
+                                type="text" 
+                                name="address"
+                                value={customerData.address}
+                                onChange={handleChange}
+                                placeholder="DirecciÃ³n de entrega" 
+                                className="w-full px-4 py-3 rounded-xl border border-cyan-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 bg-white" 
+                            />
+                            <input 
+                                type="text" 
+                                name="phone"
+                                value={customerData.phone}
+                                onChange={handleChange}
+                                placeholder="TelÃ©fono" 
+                                className="w-full px-4 py-3 rounded-xl border border-cyan-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 bg-white" 
+                            />
                         </div>
                     </div>
 
                     <button
-                        onClick={onProceedToPayment}
+                        onClick={handleProceed}
                         className="w-full py-4 rounded-xl font-bold bg-gradient-to-r from-cyan-600 to-sky-600 text-white shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/40 transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2 text-lg"
                     >
                         <RiSecurePaymentLine className="w-6 h-6" />

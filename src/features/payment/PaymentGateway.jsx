@@ -1,18 +1,46 @@
-﻿import { useState } from 'preact/hooks'
-import { RiArrowLeftLine, RiShieldCheckFill, RiMastercardFill, RiVisaLine } from '@remixicon/react'
+import { useState, useRef } from 'preact/hooks'
+import { RiArrowLeftLine, RiShieldCheckFill, RiQrCodeLine, RiImageAddLine, RiCloseLine, RiCheckLine } from '@remixicon/react'
+import qrImage from './qr.png'
 
 export const PaymentGateway = ({ total, onBack, onSuccess }) => {
     const [isProcessing, setIsProcessing] = useState(false);
+    const [paymentProof, setPaymentProof] = useState(null);
+    const [previewUrl, setPreviewUrl] = useState(null);
+    const fileInputRef = useRef(null);
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setPaymentProof(file);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPreviewUrl(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
 
     const handlePayment = (e) => {
         e.preventDefault();
+        if (!paymentProof) {
+            alert("Por favor sube el comprobante de pago.");
+            return;
+        }
+
         setIsProcessing(true);
         // Simular tiempo de procesamiento
         setTimeout(() => {
             setIsProcessing(false);
-            onSuccess();
+            // Pasamos el base64 del comprobante al éxito
+            onSuccess(previewUrl);
         }, 2000);
     }
+
+    const removeFile = () => {
+        setPaymentProof(null);
+        setPreviewUrl(null);
+        if (fileInputRef.current) fileInputRef.current.value = "";
+    };
 
     return (
         <div className="min-h-screen bg-slate-50 pt-28 pb-20 px-4 sm:px-6 lg:px-8">
@@ -30,10 +58,10 @@ export const PaymentGateway = ({ total, onBack, onSuccess }) => {
                     
                     <div className="flex justify-between items-center mb-8">
                         <div>
-                            <h2 className="text-2xl font-black text-slate-900">Pago Seguro</h2>
+                            <h2 className="text-2xl font-black text-slate-900">Transferencia Directa</h2>
                             <p className="text-slate-500 text-sm mt-1 flex items-center gap-1">
                                 <RiShieldCheckFill className="w-4 h-4 text-sky-500" />
-                                TransacciÃ³n encriptada
+                                Pago verificado por administración
                             </p>
                         </div>
                         <div className="text-right">
@@ -42,68 +70,79 @@ export const PaymentGateway = ({ total, onBack, onSuccess }) => {
                         </div>
                     </div>
 
-                    <form onSubmit={handlePayment} className="space-y-6">
-                        <div className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-2">NÃºmero de tarjeta</label>
-                                <div className="relative">
-                                    <input 
-                                        type="text" 
-                                        placeholder="0000 0000 0000 0000" 
-                                        required
-                                        className="w-full pl-4 pr-12 py-3.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 bg-slate-50 font-mono" 
-                                    />
-                                    <div className="absolute inset-y-0 right-4 flex items-center gap-2">
-                                        <RiMastercardFill className="w-6 h-6 text-slate-400" />
-                                        <RiVisaLine className="w-6 h-6 text-slate-400" />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-2">Nombre en la tarjeta</label>
-                                <input 
-                                    type="text" 
-                                    placeholder="EJ: JUAN PEREZ" 
-                                    required
-                                    className="w-full px-4 py-3.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 bg-slate-50 uppercase" 
+                    <div className="space-y-8">
+                        {/* Instrucciones y QR */}
+                        <div className="bg-slate-50 rounded-2xl p-6 border border-slate-100 text-center space-y-4">
+                            <p className="text-slate-700 font-medium">Escanea el código QR para pagar desde tu app bancaria</p>
+                            <div className="bg-white p-4 rounded-2xl inline-block shadow-sm border border-slate-200">
+                                <img 
+                                    src={qrImage} 
+                                    alt="QR de Pago Funavid" 
+                                    className="w-48 h-48 mx-auto object-contain"
                                 />
                             </div>
-
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 mb-2">Vencimiento</label>
-                                    <input 
-                                        type="text" 
-                                        placeholder="MM/AA" 
-                                        required
-                                        className="w-full px-4 py-3.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 bg-slate-50 font-mono text-center" 
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 mb-2">CVC/CVV</label>
-                                    <input 
-                                        type="text" 
-                                        placeholder="123" 
-                                        required
-                                        className="w-full px-4 py-3.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 bg-slate-50 font-mono text-center" 
-                                    />
-                                </div>
+                            <div className="space-y-1">
+                                <p className="text-sm font-bold text-slate-900 uppercase tracking-wider">Funavid Organización</p>
+                                <p className="text-xs text-slate-500">Cuenta de ahorros: 123-456789-00</p>
                             </div>
                         </div>
 
-                        <button 
-                            type="submit"
-                            disabled={isProcessing}
-                            className={`w-full py-4 rounded-xl font-bold text-white shadow-lg transition-all flex items-center justify-center gap-2 text-lg ${isProcessing ? 'bg-slate-400 shadow-none cursor-not-allowed' : 'bg-slate-900 shadow-slate-900/25 hover:shadow-slate-900/40 hover:-translate-y-0.5'}`}
-                        >
-                            {isProcessing ? (
-                                <span className="animate-pulse">Procesando pago...</span>
-                            ) : (
-                                `Pagar $${total.toLocaleString()}`
-                            )}
-                        </button>
-                    </form>
+                        {/* Subida de Comprobante */}
+                        <form onSubmit={handlePayment} className="space-y-6">
+                            <div className="space-y-3">
+                                <label className="block text-sm font-bold text-slate-700">Subir Comprobante de Pago</label>
+                                
+                                {!previewUrl ? (
+                                    <div 
+                                        onClick={() => fileInputRef.current.click()}
+                                        className="border-2 border-dashed border-slate-300 rounded-2xl p-8 text-center cursor-pointer hover:border-cyan-500 hover:bg-cyan-50 transition-all group"
+                                    >
+                                        <div className="bg-white w-12 h-12 rounded-full shadow-sm flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
+                                            <RiImageAddLine className="w-6 h-6 text-slate-400 group-hover:text-cyan-600" />
+                                        </div>
+                                        <p className="text-sm font-medium text-slate-600">Haz clic para subir imagen o captura</p>
+                                        <p className="text-xs text-slate-400 mt-1">JPG, PNG o PDF (Max 5MB)</p>
+                                        <input 
+                                            type="file" 
+                                            ref={fileInputRef}
+                                            onChange={handleFileChange}
+                                            className="hidden" 
+                                            accept="image/*"
+                                        />
+                                    </div>
+                                ) : (
+                                    <div className="relative rounded-2xl overflow-hidden border border-slate-200 shadow-sm">
+                                        <img src={previewUrl} alt="Vista previa del comprobante" className="w-full h-48 object-cover" />
+                                        <div className="absolute inset-0 bg-slate-900/40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                                            <button 
+                                                type="button"
+                                                onClick={removeFile}
+                                                className="bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-colors"
+                                            >
+                                                <RiCloseLine className="w-6 h-6" />
+                                            </button>
+                                        </div>
+                                        <div className="absolute bottom-2 right-2 bg-green-500 text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+                                            <RiCheckLine className="w-3 h-3" />
+                                            Listo para enviar
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            <button 
+                                type="submit"
+                                disabled={isProcessing || !paymentProof}
+                                className={`w-full py-4 rounded-xl font-bold text-white shadow-lg transition-all flex items-center justify-center gap-2 text-lg ${isProcessing || !paymentProof ? 'bg-slate-300 shadow-none cursor-not-allowed' : 'bg-cyan-600 shadow-cyan-600/25 hover:shadow-cyan-600/40 hover:-translate-y-0.5'}`}
+                            >
+                                {isProcessing ? (
+                                    <span className="animate-pulse">Verificando envío...</span>
+                                ) : (
+                                    `Enviar Comprobante y Finalizar`
+                                )}
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

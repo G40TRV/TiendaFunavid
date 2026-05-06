@@ -1,11 +1,11 @@
-﻿
+
 //DashboardBase: Pantalla principal para los administradores. 
 //Organiza la visualizaciÃ³n de datos usando un sistema de PestaÃ±as.
 import { TabGroup, TabList, Tab } from '@tremor/react'
 import React, { useState } from 'react'
-import CharDonut from './CharDonut'
-import SalesChart from './SalesChart'
-import DetailChart from './DetailChart'
+import CharDonut from '../graficas/CharDonut'
+import SalesChart from '../graficas/SalesChart'
+import DetailChart from '../graficas/DetailChart'
 
 const DashboardBase = () => {
     // selectedIndex: Guarda quÃ© pestaÃ±a estÃ¡ activa. principal (0) y detalles (1)
