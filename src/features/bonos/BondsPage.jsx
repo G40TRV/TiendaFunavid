@@ -1,4 +1,5 @@
 import { AlliesSection } from "../../shared/AlliesSection";
+import parque from "./parque.png";
 
 export const BondsPage = () => {
     return (
@@ -30,7 +31,7 @@ export const BondsPage = () => {
                     <div className="w-full lg:w-1/2 relative h-72 sm:h-96 rounded-2xl overflow-hidden shadow-2xl shadow-cyan-900/10 group">
                         <div className="absolute inset-0 bg-cyan-600/10 mix-blend-overlay z-10"></div>
                         <img
-                            src="/parque.png"
+                            src={parque}
                             alt="Personas colaborando por una causa"
                             className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
                         />
