@@ -15,6 +15,8 @@ import { VolunteerView } from './features/voluntario/VolunteerView'
 import { AdminNavbar } from './features/admin/AdminNavbar'
 import { AddProduct } from './features/admin/AddProduct'
 import { ProductManagement } from './features/admin/ProductManagement'
+import { BondsPage } from './features/bonos/BondsPage'
+
 
 //guardar el estado global
 
@@ -147,6 +149,9 @@ export function App() {
               } />
               <Route path="/voluntario" element={
                 <VolunteerView />
+              } />
+              <Route path="/bonos" element={
+                <BondsPage />
               } />
               <Route path="/donar" element={
                 <DonationView

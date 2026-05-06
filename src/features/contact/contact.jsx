@@ -3,15 +3,15 @@ export const ContactPage = () => {
     return (
         <div className="min-h-screen bg-slate-50 pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
             <div className="max-w-6xl mx-auto space-y-24">
-                
+
                 {/* Primera Sección: Empresa (Imagen Izquierda, Texto Derecha) */}
                 <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20 animate-in fade-in slide-in-from-bottom-8 duration-1000">
                     <div className="w-full lg:w-1/2">
                         <div className="relative rounded-3xl overflow-hidden shadow-[0_20px_50px_rgb(8,145,178,0.15)] group">
                             <div className="absolute inset-0 bg-cyan-600/10 mix-blend-overlay z-10 transition-opacity group-hover:opacity-0"></div>
-                            <img 
-                                src="/familia.png" 
-                                alt="Familia feliz" 
+                            <img
+                                src="/familia.png"
+                                alt="Familia feliz"
                                 className="w-full h-[400px] sm:h-[500px] object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
                             />
                         </div>
@@ -37,9 +37,9 @@ export const ContactPage = () => {
                     <div className="w-full lg:w-1/2">
                         <div className="relative rounded-3xl overflow-hidden shadow-[0_20px_50px_rgb(8,145,178,0.15)] group">
                             <div className="absolute inset-0 bg-cyan-600/10 mix-blend-overlay z-10 transition-opacity group-hover:opacity-0"></div>
-                            <img 
-                                src="/organizacion.png" 
-                                alt="Nuestro equipo" 
+                            <img
+                                src="/organizacion.png"
+                                alt="Nuestro equipo"
                                 className="w-full h-[400px] sm:h-[500px] object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
                             />
                         </div>
@@ -63,14 +63,14 @@ export const ContactPage = () => {
                 {/* Tercera Sección: Impacto (Imagen con texto superpuesto) */}
                 <div className="relative w-full h-[300px] sm:h-[400px] rounded-3xl overflow-hidden shadow-[0_20px_50px_rgb(8,145,178,0.2)] animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500 group">
                     {/* Imagen de fondo */}
-                    <img 
-                        src="/camara.png" 
-                        alt="Impacto Funavid" 
+                    <img
+                        src="/camara.png"
+                        alt="Impacto Funavid"
                         className="absolute inset-0 w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-1000 ease-out"
                     />
                     {/* Capa oscura para que el texto sea legible */}
                     <div className="absolute inset-0 bg-slate-900/40 group-hover:bg-slate-900/50 transition-colors duration-700"></div>
-                    
+
                     {/* Contenido flotante centrado */}
                     <div className="absolute inset-0 flex items-center justify-center p-6 sm:p-12 text-center">
                         <div className="max-w-4xl space-y-6">
