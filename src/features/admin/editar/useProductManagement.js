@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 export const useProductManagement = () => {
     const [products, setProducts] = useState([]);
@@ -91,6 +91,7 @@ export const useProductManagement = () => {
         editingId,
         editFormData,
         notification,
+        fetchProducts, // Para refrescar la lista
         handleDelete,
         handleEditClick,
         handleEditChange,
