@@ -30,11 +30,16 @@ export function App() {
   // countProducts: Guarda cuÃ¡ntos Ã­tems hay en total en el carrito.
   const [countProducts, setCountProducts] = useState(0);
 
-  // isAuth: verifica si el usuario ingresÃ³ exitosamente.
-  const [isAuth, setIsAuth] = useState(false);
+  // isAuth: verifica si el usuario ingresÃ³ exitosamente. Se inicializa desde localStorage para persistencia.
+  const [isAuth, setIsAuth] = useState(() => {
+    return localStorage.getItem('isAuth') === 'true';
+  });
 
-  // user: diferencia si el que inicio sesion es admin o usuario
-  const [user, setUser] = useState(null);
+  // user: diferencia si el que inicio sesion es admin o usuario. Se inicializa desde localStorage.
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem('user');
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
 
   // donationAmount: Guarda el monto que el usuario quiere donar
   const [donationAmount, setDonationAmount] = useState(0);
@@ -92,7 +97,12 @@ export function App() {
       {isAuth && user?.role === "admin" && (
         <Route path="/admin/*" element={
           <div className="flex flex-col min-h-screen">
-            <AdminNavbar logout={() => { setIsAuth(false); setUser(null); }} />
+            <AdminNavbar logout={() => { 
+              setIsAuth(false); 
+              setUser(null); 
+              localStorage.removeItem('isAuth');
+              localStorage.removeItem('user');
+            }} />
             <div className="flex-grow">
               <Routes>
                 <Route path="/" element={<ProductManagement />} />

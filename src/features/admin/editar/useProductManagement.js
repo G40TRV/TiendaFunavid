@@ -61,6 +61,17 @@ export const useProductManagement = () => {
         });
     };
 
+    const handleEditImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setEditFormData(prev => ({ ...prev, img: reader.result }));
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
     const handleSaveEdit = async () => {
         try {
             const response = await fetch(`http://localhost:3001/products/${editingId}`, {
@@ -95,6 +106,7 @@ export const useProductManagement = () => {
         handleDelete,
         handleEditClick,
         handleEditChange,
+        handleEditImageChange, // Nueva funciÃ³n
         handleSaveEdit,
         cancelEdit
     };
