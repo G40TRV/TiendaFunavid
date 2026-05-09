@@ -35,7 +35,10 @@ export const Navbar = ({ children }) => {
                             <RiHeartAddLine className="w-5 h-5" />
                             <span className="hidden sm:inline">Donar</span>
                         </Link>
-
+<div className="relative">
+                            {children}
+                        </div>
+                        
                         <Link
                             to="/login"
                             className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-slate-600 hover:text-cyan-600 transition-colors"
@@ -44,9 +47,7 @@ export const Navbar = ({ children }) => {
                             <span className="hidden sm:inline">Iniciar sesion</span>
                         </Link>
 
-                        <div className="relative">
-                            {children}
-                        </div>
+                        
                     </div>
                 </div>
             </div>

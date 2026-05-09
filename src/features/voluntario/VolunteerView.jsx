@@ -40,16 +40,16 @@ export const VolunteerView = () => {
                     {/* Columna Izquierda - Mensaje */}
                     <div className="lg:w-5/12 bg-slate-50/50 p-8 sm:p-12 lg:p-16 flex flex-col justify-center border-b lg:border-b-0 lg:border-r border-slate-200/60">
                         <h2 className="text-3xl sm:text-4xl font-black text-slate-900 mb-8 leading-tight">
-                            Volunteer for Funavid! <br/>
-                            <span className="text-cyan-600">We need help to keep going and growing!</span>
+                            Haz voluntariado con nosotros! <br/>
+                            <span className="text-cyan-600">Con tu ayuda podremos ayudar más!</span>
                         </h2>
                         
                         <div className="space-y-6 text-slate-600 font-medium leading-relaxed text-lg">
                             <p>
-                                – Interested in getting involved with Funavid? We provide volunteer opportunities for various interests and skills. Fill out the form below and we will get in touch with you with more details!
+                               ¿Te interesa colaborar con Funavid? Ofrecemos oportunidades de voluntariado para personas con diversos intereses y habilidades. Rellena el formulario a continuación y nos pondremos en contacto contigo para darte más detalles.
                             </p>
                             <p>
-                                – If you are a high school student, you can earn community service hours when you help out at Funavid!
+                                Si eres estudiante de secundaria, puedes ganar horas de servicio comunitario cuando ayudas en Funavid.
                             </p>
                         </div>
                     </div>

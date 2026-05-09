@@ -11,16 +11,16 @@ export function Footer() {
             <h3 className="text-xl font-bold text-white mb-4">Contacto</h3>
             <ul className="space-y-2">
               <li className="flex items-center">
-                <span className="mr-2">ðŸ“ž</span>
-                <span>TelÃ©fono: xxx-xxx-xxxx</span>
+                <span className="mr-2">Whatsapp</span>
+                <span> xxx-xxx-xxxx</span>
               </li>
               <li className="flex items-center">
-                <span className="mr-2">ðŸ“</span>
-                <span>DirecciÃ³n: xxx xxx xxx</span>
+                <span className="mr-2">Dirección</span>
+                <span>xxx xxx xxx</span>
               </li>
               <li className="flex items-center">
-                <span className="mr-2">âœ‰ï¸</span>
-                <span>Email: xxx@xxx.xxx</span>
+                <span className="mr-2">Email</span>
+                <span>xxx@xxx.xxx</span>
               </li>
             </ul>
           </div>
@@ -31,17 +31,17 @@ export function Footer() {
             <ul className="space-y-2">
               <li>
                 <Link to="#" className="hover:text-white transition-colors duration-200">
-                  PolÃ­ticas de Privacidad
+                  Polí­ticas de privacidad
                 </Link>
               </li>
               <li>
                 <Link to="#" className="hover:text-white transition-colors duration-200">
-                  TÃ©rminos y Condiciones
+                  Términos y condiciones
                 </Link>
               </li>
               <li>
                 <Link to="#" className="hover:text-white transition-colors duration-200">
-                  PolÃ­ticas de Cookies
+                  Polí­ticas de cookies
                 </Link>
               </li>
             </ul>
