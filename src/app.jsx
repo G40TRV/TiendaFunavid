@@ -4,8 +4,6 @@ import { ProducList } from './features/shop/ProductList'
 import { Header } from './features/cart/Header'
 import { Footer } from './features/shop/Footer'
 import Login from './features/auth/LoginForm'
-import CharDonut from './features/admin/graficas/CharDonut'
-import DashboardBase from './features/admin/dashboard/DashboardBase'
 import { Checkout } from './features/checkout/Checkout'
 import { PaymentGateway } from './features/payment/PaymentGateway'
 import { SuccessPage } from './features/payment/SuccessPage'
@@ -17,7 +15,6 @@ import { AddProduct } from './features/admin/add/AddProduct'
 import { ProductManagement } from './features/admin/editar/ProductManagement'
 import { PaymentReview } from './features/admin/review/PaymentReview'
 import { VerifiedHistory } from './features/admin/verify/VerifiedHistory'
-import { BondsPage } from './features/bonos/BondsPage'
 
 
 //guardar el estado global
@@ -33,11 +30,16 @@ export function App() {
   // countProducts: Guarda cuÃ¡ntos Ã­tems hay en total en el carrito.
   const [countProducts, setCountProducts] = useState(0);
 
-  // isAuth: verifica si el usuario ingresÃ³ exitosamente.
-  const [isAuth, setIsAuth] = useState(false);
+  // isAuth: verifica si el usuario ingresÃ³ exitosamente. Se inicializa desde localStorage para persistencia.
+  const [isAuth, setIsAuth] = useState(() => {
+    return localStorage.getItem('isAuth') === 'true';
+  });
 
-  // user: diferencia si el que inicio sesion es admin o usuario
-  const [user, setUser] = useState(null);
+  // user: diferencia si el que inicio sesion es admin o usuario. Se inicializa desde localStorage.
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem('user');
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
 
   // donationAmount: Guarda el monto que el usuario quiere donar
   const [donationAmount, setDonationAmount] = useState(0);
@@ -47,32 +49,45 @@ export function App() {
 
   const navigate = useNavigate();
 
-  // recordPurchase: Guarda la compra en el servidor simulado
+  // recordPurchase: Guarda la compra en el servidor y actualiza el stock
   const recordPurchase = async (paymentProof) => {
     const purchase = {
-      // Dejamos que json-server genere el ID automáticamente para evitar conflictos
-      date: new Date().toISOString().split('T')[0], // YYYY-MM-DD
+      date: new Date().toISOString().split('T')[0],
       timestamp: new Date().getTime(),
       products: allProducts,
       total: total,
-      paymentProof: paymentProof, // Guardamos la imagen en base64
-      customer: customerInfo, // Datos del cliente
-      status: 'pending' // Estado inicial
+      paymentProof: paymentProof,
+      customer: customerInfo,
+      status: 'pending'
     };
 
     try {
+      // 1. Guardar la compra
       const response = await fetch("http://localhost:3001/purchases", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(purchase)
       });
 
-      if (!response.ok) {
-        throw new Error('Error en el servidor al guardar la compra');
+      if (!response.ok) throw new Error('Error guardando compra');
+
+      // 2. Actualizar el stock de cada producto
+      for (const item of allProducts) {
+        // Obtenemos la data actual del producto para tener el stock más reciente
+        const pResponse = await fetch(`http://localhost:3001/products/${item.id}`);
+        const currentProduct = await pResponse.json();
+        
+        const newQuantity = Math.max(0, currentProduct.quantity - item.quantity);
+        
+        await fetch(`http://localhost:3001/products/${item.id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ quantity: newQuantity })
+        });
       }
     } catch (error) {
-      console.error("Error registrando compra:", error);
-      alert("Hubo un problema al guardar tu comprobante. Por favor intenta con una imagen más pequeña.");
+      console.error("Error registrando compra o actualizando stock:", error);
+      alert("Hubo un problema al procesar tu pedido.");
     }
   };
 
@@ -82,10 +97,15 @@ export function App() {
       {isAuth && user?.role === "admin" && (
         <Route path="/admin/*" element={
           <div className="flex flex-col min-h-screen">
-            <AdminNavbar logout={() => { setIsAuth(false); setUser(null); }} />
+            <AdminNavbar logout={() => { 
+              setIsAuth(false); 
+              setUser(null); 
+              localStorage.removeItem('isAuth');
+              localStorage.removeItem('user');
+            }} />
             <div className="flex-grow">
               <Routes>
-                <Route path="/" element={<DashboardBase />} />
+                <Route path="/" element={<ProductManagement />} />
                 <Route path="products" element={<ProductManagement />} />
                 <Route path="add-product" element={<AddProduct />} />
                 <Route path="payments" element={<PaymentReview />} />
@@ -168,9 +188,6 @@ export function App() {
               } />
               <Route path="/voluntario" element={
                 <VolunteerView />
-              } />
-              <Route path="/bonos" element={
-                <BondsPage />
               } />
               <Route path="/donar" element={
                 <DonationView

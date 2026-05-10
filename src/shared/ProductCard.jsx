@@ -3,15 +3,17 @@ import { RiShoppingCart2Line, RiCheckLine, RiAddLine, RiSubtractLine } from '@re
 
 export const ProductCard = ({ product, index, isAdded, onAddProduct }) => {
     const [localQuantity, setLocalQuantity] = useState(1);
+    const isOutOfStock = product.quantity <= 0;
 
     const handleAdd = () => {
+        if (isOutOfStock) return;
         onAddProduct(product, localQuantity);
-        setLocalQuantity(1); // Reset after adding
+        setLocalQuantity(1); 
     };
 
     return (
         <div
-            className="group bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden transition-all duration-300 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] hover:-translate-y-1 animate-in fade-in zoom-in-95"
+            className={`group bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden transition-all duration-300 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)] hover:-translate-y-1 animate-in fade-in zoom-in-95 ${isOutOfStock ? 'opacity-75 grayscale-[0.5]' : ''}`}
             style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'both' }}
         >
             <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
@@ -20,9 +22,20 @@ export const ProductCard = ({ product, index, isAdded, onAddProduct }) => {
                     alt={product.nameProduct}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                 />
-                <span className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-slate-900 shadow-sm">
-                    Destacado
-                </span>
+                <div className="absolute top-4 left-4 flex flex-col gap-2">
+                    <span className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-slate-900 shadow-sm">
+                        Destacado
+                    </span>
+                    {isOutOfStock ? (
+                        <span className="bg-rose-600 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter shadow-lg shadow-rose-600/30">
+                            Agotado
+                        </span>
+                    ) : (
+                        <span className="bg-emerald-500 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter shadow-lg shadow-emerald-500/30">
+                            Stock: {product.quantity} uds
+                        </span>
+                    )}
+                </div>
             </div>
 
             <div className="p-6 flex flex-col gap-4">
@@ -41,17 +54,19 @@ export const ProductCard = ({ product, index, isAdded, onAddProduct }) => {
                 </div>
 
                 {/* Controles de cantidad */}
-                <div className="flex items-center justify-between border border-slate-200 rounded-xl p-1">
+                <div className={`flex items-center justify-between border border-slate-200 rounded-xl p-1 ${isOutOfStock ? 'bg-slate-50 cursor-not-allowed opacity-50' : ''}`}>
                     <button 
                         onClick={() => setLocalQuantity(Math.max(1, localQuantity - 1))}
-                        className="p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
+                        disabled={isOutOfStock}
+                        className="p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors disabled:pointer-events-none"
                     >
                         <RiSubtractLine className="w-5 h-5" />
                     </button>
-                    <span className="font-bold text-slate-900 w-8 text-center">{localQuantity}</span>
+                    <span className="font-bold text-slate-900 w-8 text-center">{isOutOfStock ? 0 : localQuantity}</span>
                     <button 
-                        onClick={() => setLocalQuantity(localQuantity + 1)}
-                        className="p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
+                        onClick={() => setLocalQuantity(Math.min(product.quantity, localQuantity + 1))}
+                        disabled={isOutOfStock || localQuantity >= product.quantity}
+                        className="p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors disabled:text-slate-300 disabled:pointer-events-none"
                     >
                         <RiAddLine className="w-5 h-5" />
                     </button>
@@ -59,9 +74,12 @@ export const ProductCard = ({ product, index, isAdded, onAddProduct }) => {
 
                 <button
                     onClick={handleAdd}
-                    className={`w-full py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 font-bold text-sm transition-all duration-300 ${isAdded ? 'bg-sky-500 text-white shadow-sky-500/30 shadow-lg' : 'bg-slate-900 text-white shadow-lg shadow-slate-900/20 hover:bg-cyan-600 hover:shadow-cyan-600/30 hover:-translate-y-0.5'}`}
+                    disabled={isOutOfStock}
+                    className={`w-full py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 font-bold text-sm transition-all duration-300 ${isOutOfStock ? 'bg-slate-200 text-slate-500 cursor-not-allowed shadow-none' : isAdded ? 'bg-sky-500 text-white shadow-sky-500/30 shadow-lg' : 'bg-slate-900 text-white shadow-lg shadow-slate-900/20 hover:bg-cyan-600 hover:shadow-cyan-600/30 hover:-translate-y-0.5'}`}
                 >
-                    {isAdded ? (
+                    {isOutOfStock ? (
+                        'No disponible'
+                    ) : isAdded ? (
                         <>
                             <RiCheckLine className="w-5 h-5" />
                             ¡Añadido!

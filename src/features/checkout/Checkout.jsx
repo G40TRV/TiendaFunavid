@@ -6,7 +6,8 @@ export const Checkout = ({ allProducts, total, onProceedToPayment, onBack }) => 
     const [customerData, setCustomerData] = useState({
         name: '',
         address: '',
-        phone: ''
+        phone: '',
+        email: ''
     });
 
     const handleChange = (e) => {
@@ -15,8 +16,8 @@ export const Checkout = ({ allProducts, total, onProceedToPayment, onBack }) => 
     };
 
     const handleProceed = () => {
-        if (!customerData.name || !customerData.address || !customerData.phone) {
-            alert("Por favor completa todos los datos de envÃ­o.");
+        if (!customerData.name || !customerData.address || !customerData.phone || !customerData.email) {
+            alert("Por favor completa todos los datos de envío.");
             return;
         }
         onProceedToPayment(customerData);
@@ -75,11 +76,11 @@ export const Checkout = ({ allProducts, total, onProceedToPayment, onBack }) => 
                                 className="w-full px-4 py-3 rounded-xl border border-cyan-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 bg-white" 
                             />
                             <input 
-                                type="text" 
-                                name="address"
-                                value={customerData.address}
+                                type="email" 
+                                name="email"
+                                value={customerData.email}
                                 onChange={handleChange}
-                                placeholder="DirecciÃ³n de entrega" 
+                                placeholder="Correo electrÃ³nico" 
                                 className="w-full px-4 py-3 rounded-xl border border-cyan-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 bg-white" 
                             />
                             <input 
@@ -88,6 +89,14 @@ export const Checkout = ({ allProducts, total, onProceedToPayment, onBack }) => 
                                 value={customerData.phone}
                                 onChange={handleChange}
                                 placeholder="TelÃ©fono" 
+                                className="w-full px-4 py-3 rounded-xl border border-cyan-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 bg-white" 
+                            />
+                            <input 
+                                type="text" 
+                                name="address"
+                                value={customerData.address}
+                                onChange={handleChange}
+                                placeholder="DirecciÃ³n de entrega" 
                                 className="w-full px-4 py-3 rounded-xl border border-cyan-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 bg-white" 
                             />
                         </div>

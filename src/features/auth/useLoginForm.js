@@ -1,4 +1,4 @@
-﻿import { useState } from "preact/hooks";
+import { useState } from "preact/hooks";
 
 //consolida a los usuarios de la pagina
 const users = [
@@ -26,6 +26,9 @@ export const useLoginForm = (setIsAuth, setUser) => {
     if (user) {
       setIsAuth(true);
       setUser(user);
+      // Persistencia: Guardar en localStorage
+      localStorage.setItem('isAuth', 'true');
+      localStorage.setItem('user', JSON.stringify(user));
     } else {
       setError("Usuario o contraseÃ±a incorrectos");
       // Limpia la variable de error despuÃ©s de 3 segundos. 

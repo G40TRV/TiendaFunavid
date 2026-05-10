@@ -8,6 +8,16 @@ export const useProductList = ({ allProducts, setAllProducts, countProducts, set
     // Función onAddProduct: Se ejecuta cada vez que se da click al botón del producto, 
     // Añade el producto al carrito considerando la cantidad seleccionada.
     const onAddProduct = (product, quantityToAdd = 1) => {
+        // Encontrar si el producto ya está en el carrito para saber cuántos hay guardados
+        const existingInCart = allProducts.find(item => item.id === product.id);
+        const currentCartQty = existingInCart ? existingInCart.quantity : 0;
+        
+        // Verificar si la suma de lo que ya hay + lo nuevo supera el stock total
+        if (currentCartQty + quantityToAdd > product.quantity) {
+            alert(`Lo sentimos, solo quedan ${product.quantity} unidades disponibles de este producto.`);
+            return;
+        }
+
         if (!addedIds.includes(product.id)) {
             setAddedIds([...addedIds, product.id]);
             setTimeout(() => {
@@ -15,9 +25,7 @@ export const useProductList = ({ allProducts, setAllProducts, countProducts, set
             }, 1000);
         }
 
-        // Si el producto que intentamos subir ya esta en el carrito, 
-        // en lugar de añadir un objeto nuevo incrementamos su cantidad.
-        if (allProducts.find(item => item.id === product.id)) {
+        if (existingInCart) {
             const products = allProducts.map(item =>
                 item.id === product.id
                     ? { ...item, quantity: item.quantity + quantityToAdd }
@@ -28,7 +36,6 @@ export const useProductList = ({ allProducts, setAllProducts, countProducts, set
             return setAllProducts([...products]);
         }
 
-        // Si no estaba sumamos su precio al total
         setTotal(total + product.price * quantityToAdd);
         setCountProducts(countProducts + quantityToAdd);
         setAllProducts([...allProducts, { ...product, quantity: quantityToAdd }]);
