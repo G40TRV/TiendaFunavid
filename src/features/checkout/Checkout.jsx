@@ -64,51 +64,61 @@ export const Checkout = ({ allProducts, total, onProceedToPayment, onBack }) => 
                         <p className="text-4xl font-black text-cyan-600 tracking-tight">${total.toLocaleString()}</p>
                     </div>
 
-                    <div className="bg-cyan-50 border border-cyan-100 rounded-2xl p-6 mb-8">
-                        <h3 className="font-bold text-cyan-900 mb-4">Datos de envÃ­o</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <input 
-                                type="text" 
-                                name="name"
-                                value={customerData.name}
-                                onChange={handleChange}
-                                placeholder="Nombre completo" 
-                                className="w-full px-4 py-3 rounded-xl border border-cyan-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 bg-white" 
-                            />
-                            <input 
-                                type="email" 
-                                name="email"
-                                value={customerData.email}
-                                onChange={handleChange}
-                                placeholder="Correo electrÃ³nico" 
-                                className="w-full px-4 py-3 rounded-xl border border-cyan-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 bg-white" 
-                            />
-                            <input 
-                                type="text" 
-                                name="phone"
-                                value={customerData.phone}
-                                onChange={handleChange}
-                                placeholder="TelÃ©fono" 
-                                className="w-full px-4 py-3 rounded-xl border border-cyan-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 bg-white" 
-                            />
-                            <input 
-                                type="text" 
-                                name="address"
-                                value={customerData.address}
-                                onChange={handleChange}
-                                placeholder="DirecciÃ³n de entrega" 
-                                className="w-full px-4 py-3 rounded-xl border border-cyan-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 bg-white" 
-                            />
+                    <form onSubmit={(e) => { e.preventDefault(); handleProceed(); }} className="space-y-8">
+                        <div className="bg-cyan-50 border border-cyan-100 rounded-2xl p-6">
+                            <h3 className="font-bold text-cyan-900 mb-4">Datos de envÃ­o</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <input 
+                                    type="text" 
+                                    name="name"
+                                    required
+                                    pattern="^[a-zA-ZÃ¡Ã©Ã­Ã³ÃºÃÃ‰ÃÃ“ÃšÃ±Ã‘\s]+$"
+                                    title="El nombre solo debe contener letras y espacios"
+                                    value={customerData.name}
+                                    onChange={handleChange}
+                                    placeholder="Nombre completo" 
+                                    className="w-full px-4 py-3 rounded-xl border border-cyan-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 bg-white transition-all" 
+                                />
+                                <input 
+                                    type="email" 
+                                    name="email"
+                                    required
+                                    value={customerData.email}
+                                    onChange={handleChange}
+                                    placeholder="Correo electrÃ³nico" 
+                                    className="w-full px-4 py-3 rounded-xl border border-cyan-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 bg-white transition-all" 
+                                />
+                                <input 
+                                    type="tel" 
+                                    name="phone"
+                                    required
+                                    pattern="[0-9]{7,15}"
+                                    title="El telÃ©fono debe contener entre 7 y 15 nÃºmeros"
+                                    value={customerData.phone}
+                                    onChange={handleChange}
+                                    placeholder="TelÃ©fono (solo nÃºmeros)" 
+                                    className="w-full px-4 py-3 rounded-xl border border-cyan-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 bg-white transition-all" 
+                                />
+                                <input 
+                                    type="text" 
+                                    name="address"
+                                    required
+                                    value={customerData.address}
+                                    onChange={handleChange}
+                                    placeholder="DirecciÃ³n de entrega" 
+                                    className="w-full px-4 py-3 rounded-xl border border-cyan-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 bg-white transition-all" 
+                                />
+                            </div>
                         </div>
-                    </div>
 
-                    <button
-                        onClick={handleProceed}
-                        className="w-full py-4 rounded-xl font-bold bg-gradient-to-r from-cyan-600 to-sky-600 text-white shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/40 transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2 text-lg"
-                    >
-                        <RiSecurePaymentLine className="w-6 h-6" />
-                        Ir al pago seguro
-                    </button>
+                        <button
+                            type="submit"
+                            className="w-full py-4 rounded-xl font-bold bg-gradient-to-r from-cyan-600 to-sky-600 text-white shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/40 transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2 text-lg"
+                        >
+                            <RiSecurePaymentLine className="w-6 h-6" />
+                            Ir al pago seguro
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>

@@ -72,23 +72,60 @@ export const VolunteerView = () => {
                         <form ref={form} onSubmit={handleSubmit} className="space-y-6">
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                 <div>
-                                    <input type="text" name="first_name" required className="w-full px-5 py-4 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 bg-white transition-colors text-slate-700 placeholder:text-slate-400" placeholder="First Name" />
+                                    <input
+                                        type="text"
+                                        name="first_name"
+                                        required
+                                        pattern="^[a-zA-ZÃ¡Ã©Ã­Ã³ÃºÃ Ã‰Ã Ã“ÃšÃ±Ã‘\s]+$"
+                                        title="Solo se permiten letras en este campo"
+                                        className="w-full px-5 py-4 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 bg-white transition-colors text-slate-700 placeholder:text-slate-400"
+                                        placeholder="First Name"
+                                    />
                                 </div>
                                 <div>
-                                    <input type="text" name="last_name" required className="w-full px-5 py-4 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 bg-white transition-colors text-slate-700 placeholder:text-slate-400" placeholder="Last Name" />
+                                    <input
+                                        type="text"
+                                        name="last_name"
+                                        required
+                                        pattern="^[a-zA-ZÃ¡Ã©Ã­Ã³ÃºÃ Ã‰Ã Ã“ÃšÃ±Ã‘\s]+$"
+                                        title="Solo se permiten letras en este campo"
+                                        className="w-full px-5 py-4 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 bg-white transition-colors text-slate-700 placeholder:text-slate-400"
+                                        placeholder="Last Name"
+                                    />
                                 </div>
                             </div>
 
                             <div>
-                                <input type="email" name="user_email" required className="w-full px-5 py-4 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 bg-white transition-colors text-slate-700 placeholder:text-slate-400" placeholder="Email" />
+                                <input
+                                    type="email"
+                                    name="user_email"
+                                    required
+                                    className="w-full px-5 py-4 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 bg-white transition-colors text-slate-700 placeholder:text-slate-400"
+                                    placeholder="Email"
+                                />
                             </div>
 
                             <div>
-                                <input type="tel" name="phone" required className="w-full px-5 py-4 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 bg-white transition-colors text-slate-700 placeholder:text-slate-400" placeholder="Phone number" />
+                                <input
+                                    type="tel"
+                                    name="phone"
+                                    required
+                                    pattern="[0-9]{7,15}"
+                                    title="El telÃ©fono debe contener solo nÃºmeros (7-15 dÃ­gitos)"
+                                    className="w-full px-5 py-4 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 bg-white transition-colors text-slate-700 placeholder:text-slate-400"
+                                    placeholder="Phone number"
+                                />
                             </div>
 
                             <div>
-                                <textarea name="message" rows="5" required className="w-full px-5 py-4 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 bg-white transition-colors resize-none text-slate-700 placeholder:text-slate-400" placeholder="Message"></textarea>
+                                <textarea
+                                    name="message"
+                                    rows="5"
+                                    required
+                                    minLength="25"
+                                    className="w-full px-5 py-4 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 bg-white transition-colors resize-none text-slate-700 placeholder:text-slate-400"
+                                    placeholder="Tell us why you want to volunteer (Minimum 25 characters)"
+                                ></textarea>
                             </div>
 
                             <div className="flex items-start gap-3 pt-2">
