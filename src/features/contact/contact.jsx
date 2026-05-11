@@ -22,15 +22,15 @@ export const ContactPage = () => {
                     </div>
                     <div className="w-full lg:w-1/2 space-y-6">
                         <h2 className="text-4xl lg:text-5xl font-black text-slate-900 tracking-tight">
-                            Nuestra <span className="text-cyan-600">Empresa</span>
+                            Sobre<span className="text-cyan-600">Nosotros</span>
                         </h2>
                         <div className="w-20 h-1.5 bg-gradient-to-r from-cyan-600 to-sky-400 rounded-full"></div>
                         <div className="space-y-4 text-lg text-slate-600 leading-relaxed font-medium">
                             <p>
-                                En Funavid, nos dedicamos al bienestar integral de los niños y sus familias. Somos una organización sin ánimos de lucro comprometida con ofrecer bienestar y darle felicidad a los niños.
+                                En Funavid, nos dedicamos al bienestar integral de los niños con cancer. Somos una organización sin ánimos de lucro comprometida con ofrecer bienestar y darle felicidad a los niños.
                             </p>
                             <p>
-                                Trabajamos día a día para asegurar que cada familia tenga acceso a los recursos médicos y el apoyo necesario para gozar de una vida plena, saludable y llena de oportunidades.
+                                Trabajamos día a día para asegurar que cada niño tenga acceso a los recursos médicos y el apoyo necesario para gozar de una vida plena, saludable y llena de oportunidades.
                             </p>
                         </div>
                     </div>
@@ -55,7 +55,7 @@ export const ContactPage = () => {
                         <div className="w-20 h-1.5 bg-gradient-to-r from-cyan-600 to-sky-400 rounded-full ml-0 lg:ml-auto"></div>
                         <div className="space-y-4 text-lg text-slate-600 leading-relaxed font-medium">
                             <p>
-                                Detrás de cada proyecto y sonrisa hay un grupo humano verdaderamente extraordinario. Nuestro equipo está conformado por profesionales apasionados que dedican su vida a construir un futuro mejor.
+                                Detrás de cada proyecto y sonrisa hay un grupo humano verdaderamente extraordinario. Nuestro equipo está conformado por profesionales apasionados que dedican su vida a construir un futuro mejor para los niños.
                             </p>
                             <p>
                                 Creemos firmemente que trabajando juntos, uniendo la vocación médica con la empatía y el espíritu voluntario, somos capaces de transformar la realidad de quienes más lo necesitan.
@@ -79,7 +79,7 @@ export const ContactPage = () => {
                     <div className="absolute inset-0 flex items-center justify-center p-6 sm:p-12 text-center">
                         <div className="max-w-4xl space-y-6">
                             <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-white leading-tight drop-shadow-lg">
-                                Nuestra aporta ha ayudado a varias familias y hecho muchos niños felices.
+                                Nuestro aporte hace a muchos niños felices
                             </h2>
                             <div className="w-20 sm:w-24 h-1.5 bg-cyan-400 rounded-full mx-auto shadow-lg"></div>
                         </div>
