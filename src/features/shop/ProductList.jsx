@@ -61,7 +61,7 @@ export const ProducList = (props) => {
                     <div className="mb-16">
                         <div className="border-b border-slate-200 mb-8">
                             <h3 className="text-2xl font-black text-slate-800 inline-block border-b-4 border-cyan-600 pb-2 px-1 -mb-[2px]">
-                                ✨ Novedades
+                                Novedades
                             </h3>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
@@ -122,7 +122,7 @@ export const ProducList = (props) => {
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {mockTestimonials.map((testimonial) => (
-                            <TestimonialCard 
+                            <TestimonialCard
                                 key={testimonial.id}
                                 name={testimonial.name}
                                 text={testimonial.text}

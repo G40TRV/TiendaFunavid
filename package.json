@@ -10,6 +10,7 @@
     "server": "npx -y json-server --watch db.json --port 3001"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@remixicon/react": "^4.9.0",
     "@tremor/react": "^3.18.7",
     "clsx": "^2.1.1",
