@@ -13,8 +13,8 @@ export const useProductList = ({ allProducts, setAllProducts, countProducts, set
         const currentCartQty = existingInCart ? existingInCart.quantity : 0;
         
         // Verificar si la suma de lo que ya hay + lo nuevo supera el stock total
-        if (currentCartQty + quantityToAdd > product.quantity) {
-            alert(`Lo sentimos, solo quedan ${product.quantity} unidades disponibles de este producto.`);
+        if (currentCartQty + quantityToAdd > product.stock) {
+            alert(`Lo sentimos, solo quedan ${product.stock} unidades disponibles de este producto.`);
             return;
         }
 

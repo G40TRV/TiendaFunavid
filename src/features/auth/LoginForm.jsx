@@ -5,8 +5,8 @@ import { useLoginForm } from "./useLoginForm";
 
 function Login({ setIsAuth, setUser }) {
   const {
-    username,
-    setUsername,
+    email,
+    setEmail,
     password,
     setPassword,
     error,
@@ -53,10 +53,10 @@ function Login({ setIsAuth, setUser }) {
               </div>
               {/*input para ingresar el usuario*/}
               <input
-                type="text"
-                placeholder="Usuario"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                type="email"
+                placeholder="Correo electrónico"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full pl-11 pr-4 py-3.5 bg-slate-900/50 border border-slate-800 rounded-xl text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 focus:bg-slate-900/80 transition-all font-medium"
               />
             </div>
@@ -89,7 +89,7 @@ function Login({ setIsAuth, setUser }) {
         <div className="mt-8 text-center">
           <p className="text-xs text-slate-500 font-medium">
             Credenciales de administrador: <br />
-            <span className="text-slate-400">admin:123456</span>
+            <span className="text-slate-400">admin@tiendafunavid.com / admin123</span>
           </p>
         </div>
       </div>

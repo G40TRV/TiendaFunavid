@@ -3,6 +3,7 @@ import banner from "./banner.png";
 import { ProductCard } from "../../shared/ProductCard";
 import { TestimonialCard } from "../../shared/TestimonialCard";
 import { useProductList } from "./useProductList";
+import { API_ENDPOINTS } from "../../shared/api";
 import { RiArrowLeftSLine, RiArrowRightSLine } from "@remixicon/react";
 import { AlliesSection } from "../../shared/AlliesSection";
 
@@ -25,7 +26,7 @@ export const ProducList = (props) => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await fetch("http://localhost:3001/products");
+                const response = await fetch(API_ENDPOINTS.PRODUCTS.LIST);
                 const data = await response.json();
                 setProducts(data);
             } catch (error) {

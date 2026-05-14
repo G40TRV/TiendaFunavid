@@ -33,7 +33,7 @@ export const AdminPurchaseCard = ({
                     <div className="flex flex-col items-end gap-2">
                         <div className="flex items-center gap-1 text-slate-500 text-sm">
                             <RiCalendarLine className="w-4 h-4" />
-                            {purchase.date}
+                            {purchase.createdAt ? new Date(purchase.createdAt).toLocaleDateString() : purchase.date}
                         </div>
                         <button
                             onClick={() => onDelete(purchase.id)}
@@ -59,7 +59,7 @@ export const AdminPurchaseCard = ({
                 <p className="text-xs font-bold text-slate-400 uppercase">Productos:</p>
                 {purchase.products.map((p, i) => (
                     <div key={i} className="flex justify-between text-sm text-slate-600">
-                        <span className="truncate pr-4">{p.quantity}x {p.nameProduct}</span>
+                        <span className="truncate pr-4">{p.quantity}x {p.name || p.nameProduct}</span>
                         <span className="font-mono text-slate-400">${(p.price * p.quantity).toLocaleString()}</span>
                     </div>
                 ))}

@@ -15,6 +15,8 @@ import { AddProduct } from './features/admin/add/AddProduct'
 import { ProductManagement } from './features/admin/editar/ProductManagement'
 import { PaymentReview } from './features/admin/review/PaymentReview'
 import { VerifiedHistory } from './features/admin/verify/VerifiedHistory'
+import { API_ENDPOINTS } from './shared/api'
+import { auth } from './shared/auth'
 
 
 //guardar el estado global
@@ -49,44 +51,33 @@ export function App() {
 
   const navigate = useNavigate();
 
-  // recordPurchase: Guarda la compra en el servidor y actualiza el stock
+  // recordPurchase: Crea un pedido en el servidor con los productos del carrito
   const recordPurchase = async (paymentProof) => {
-    const purchase = {
-      date: new Date().toISOString().split('T')[0],
-      timestamp: new Date().getTime(),
-      products: allProducts,
-      total: total,
-      paymentProof: paymentProof,
-      customer: customerInfo,
-      status: 'pending'
+    const orderData = {
+      customerName: customerInfo.name,
+      customerEmail: customerInfo.email,
+      customerPhone: customerInfo.phone,
+      shippingAddress: customerInfo.address,
+      shippingCity: customerInfo.city,
+      shippingPostalCode: customerInfo.postalCode,
+      items: allProducts.map(item => ({
+        productId: item.id,
+        quantity: item.quantity
+      }))
     };
 
     try {
-      // 1. Guardar la compra
-      const response = await fetch("http://localhost:3001/purchases", {
+      const response = await fetch(API_ENDPOINTS.ORDERS.LIST, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(purchase)
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(orderData)
       });
 
-      if (!response.ok) throw new Error('Error guardando compra');
-
-      // 2. Actualizar el stock de cada producto
-      for (const item of allProducts) {
-        // Obtenemos la data actual del producto para tener el stock más reciente
-        const pResponse = await fetch(`http://localhost:3001/products/${item.id}`);
-        const currentProduct = await pResponse.json();
-        
-        const newQuantity = Math.max(0, currentProduct.quantity - item.quantity);
-        
-        await fetch(`http://localhost:3001/products/${item.id}`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ quantity: newQuantity })
-        });
-      }
+      if (!response.ok) throw new Error('Error creando pedido');
     } catch (error) {
-      console.error("Error registrando compra o actualizando stock:", error);
+      console.error("Error registrando pedido:", error);
       alert("Hubo un problema al procesar tu pedido.");
     }
   };
@@ -102,6 +93,7 @@ export function App() {
               setUser(null); 
               localStorage.removeItem('isAuth');
               localStorage.removeItem('user');
+              auth.clear();
             }} />
             <div className="flex-grow">
               <Routes>

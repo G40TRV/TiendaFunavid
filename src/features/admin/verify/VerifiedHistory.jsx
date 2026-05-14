@@ -3,23 +3,25 @@ import { RiHistoryLine, RiCheckboxCircleLine } from '@remixicon/react';
 import { ImageModal } from '../../../shared/ImageModal';
 import { HistoryFilters } from './HistoryFilters';
 import { AdminPurchaseCard } from '../../../shared/AdminPurchaseCard';
+import { API_ENDPOINTS } from '../../../shared/api';
+import { auth } from '../../../shared/auth';
 
 export const VerifiedHistory = () => {
-    const [history, setHistory] = useState([]);
+    const [orders, setOrders] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [selectedImage, setSelectedImage] = useState(null);
 
-    // Estados para filtrado y ordenamiento
     const [searchTerm, setSearchTerm] = useState('');
-    const [sortBy, setSortBy] = useState('date-desc'); // date-desc, date-asc, name-asc
-    const [searchMode, setSearchMode] = useState('product'); // product, customer, date
+    const [sortBy, setSortBy] = useState('date-desc');
+    const [searchMode, setSearchMode] = useState('product');
 
     useEffect(() => {
-        const fetchHistory = async () => {
+        const fetchOrders = async () => {
             try {
-                const response = await fetch("http://localhost:3001/verified_history");
+                const response = await fetch(API_ENDPOINTS.ORDERS.LIST);
                 const data = await response.json();
-                setHistory(data.sort((a, b) => b.timestamp - a.timestamp));
+                const paidOrders = data.filter(o => o.status === 'PAID' || o.status === 'SHIPPED' || o.status === 'DELIVERED');
+                setOrders(paidOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
             } catch (error) {
                 console.error("Error cargando historial:", error);
             } finally {
@@ -27,45 +29,45 @@ export const VerifiedHistory = () => {
             }
         };
 
-        fetchHistory();
+        fetchOrders();
     }, []);
 
     const handleDelete = async (id) => {
-        if (window.confirm("¿Estás seguro de que deseas eliminar este registro del historial? Esto no afectará las estadísticas ni la base de datos principal.")) {
+        if (window.confirm("¿Estás seguro de que deseas eliminar este registro? Esto no se puede deshacer.")) {
             try {
-                await fetch(`http://localhost:3001/verified_history/${id}`, {
-                    method: "DELETE"
+                await fetch(API_ENDPOINTS.ORDERS.BY_ID(id), {
+                    method: "DELETE",
+                    headers: auth.getAuthHeader()
                 });
-                setHistory(history.filter(p => p.id !== id));
+                setOrders(orders.filter(o => o.id !== id));
             } catch (error) {
-                console.error("Error eliminando del historial:", error);
+                console.error("Error eliminando pedido:", error);
                 alert("Error al eliminar el registro.");
             }
         }
     };
 
-    // Lógica de filtrado y ordenamiento
-    const filteredHistory = history
+    const filteredOrders = orders
         .filter(item => {
             if (!searchTerm) return true;
 
             if (searchMode === 'product') {
-                return item.products.some(p =>
-                    p.nameProduct.toLowerCase().includes(searchTerm.toLowerCase())
+                return (item.items || []).some(i =>
+                    i.name?.toLowerCase().includes(searchTerm.toLowerCase())
                 );
             } else if (searchMode === 'customer') {
-                return item.customer?.name?.toLowerCase().includes(searchTerm.toLowerCase());
+                return item.customerName?.toLowerCase().includes(searchTerm.toLowerCase());
             } else if (searchMode === 'date') {
-                return item.date === searchTerm;
+                return item.createdAt?.split('T')[0] === searchTerm;
             }
             return true;
         })
         .sort((a, b) => {
-            if (sortBy === 'date-desc') return b.timestamp - a.timestamp;
-            if (sortBy === 'date-asc') return a.timestamp - b.timestamp;
+            if (sortBy === 'date-desc') return new Date(b.createdAt) - new Date(a.createdAt);
+            if (sortBy === 'date-asc') return new Date(a.createdAt) - new Date(b.createdAt);
             if (sortBy === 'name-asc') {
-                const nameA = a.customer?.name?.toLowerCase() || '';
-                const nameB = b.customer?.name?.toLowerCase() || '';
+                const nameA = a.customerName?.toLowerCase() || '';
+                const nameB = b.customerName?.toLowerCase() || '';
                 return nameA.localeCompare(nameB);
             }
             return 0;
@@ -86,13 +88,12 @@ export const VerifiedHistory = () => {
                     <div>
                         <h2 className="text-3xl font-black text-slate-900 flex items-center gap-3">
                             <RiHistoryLine className="text-emerald-600 w-8 h-8" />
-                            Historial de Pagos <span className="text-emerald-600">Verificados</span>
+                            Historial de Pedidos <span className="text-emerald-600">Verificados</span>
                         </h2>
-                        <p className="text-slate-500 mt-2">Registro de pedidos que ya han sido procesados y confirmados.</p>
+                        <p className="text-slate-500 mt-2">Registro de pedidos que ya han sido pagados y procesados.</p>
                     </div>
 
-                    {/* Barra de Filtros Unificada y Simétrica */}
-                    <HistoryFilters 
+                    <HistoryFilters
                         searchMode={searchMode}
                         setSearchMode={setSearchMode}
                         searchTerm={searchTerm}
@@ -103,22 +104,33 @@ export const VerifiedHistory = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {filteredHistory.length === 0 ? (
+                    {filteredOrders.length === 0 ? (
                         <div className="col-span-full bg-white border border-slate-200 rounded-3xl p-20 text-center shadow-sm">
                             <RiHistoryLine className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-                            <p className="text-slate-400 text-xl font-medium">No se encontraron registros que coincidan.</p>
+                            <p className="text-slate-400 text-xl font-medium">No se encontraron pedidos verificados.</p>
                         </div>
                     ) : (
-                        filteredHistory.map((item) => (
+                        filteredOrders.map((order) => (
                             <AdminPurchaseCard
-                                key={item.id}
-                                purchase={item}
-                                onDelete={handleDelete}
+                                key={order.id}
+                                purchase={{
+                                    ...order,
+                                    products: order.items || [],
+                                    customer: {
+                                        name: order.customerName,
+                                        email: order.customerEmail,
+                                        phone: order.customerPhone,
+                                        address: order.shippingAddress,
+                                        city: order.shippingCity,
+                                        postalCode: order.shippingPostalCode
+                                    }
+                                }}
+                                onDelete={() => handleDelete(order.id)}
                                 onImageClick={setSelectedImage}
                                 statusBadge={
                                     <div className="flex items-center gap-1 text-emerald-600 text-xs font-bold bg-emerald-50 px-2 py-1 rounded-lg border border-emerald-100">
                                         <RiCheckboxCircleLine className="w-4 h-4" />
-                                        VERIFICADO
+                                        {order.status || 'VERIFICADO'}
                                     </div>
                                 }
                             />
@@ -127,11 +139,10 @@ export const VerifiedHistory = () => {
                 </div>
             </div>
 
-            {/* Modal para ver imagen completa */}
-            <ImageModal 
-                isOpen={!!selectedImage} 
-                onClose={() => setSelectedImage(null)} 
-                imageUrl={selectedImage} 
+            <ImageModal
+                isOpen={!!selectedImage}
+                onClose={() => setSelectedImage(null)}
+                imageUrl={selectedImage}
                 title="Detalle del Comprobante (Verificado)"
             />
         </div>

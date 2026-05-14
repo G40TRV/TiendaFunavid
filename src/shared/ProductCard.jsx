@@ -3,7 +3,7 @@ import { RiShoppingCart2Line, RiCheckLine, RiAddLine, RiSubtractLine } from '@re
 
 export const ProductCard = ({ product, index, isAdded, onAddProduct }) => {
     const [localQuantity, setLocalQuantity] = useState(1);
-    const isOutOfStock = product.quantity <= 0;
+    const isOutOfStock = product.stock <= 0;
 
     const handleAdd = () => {
         if (isOutOfStock) return;
@@ -18,7 +18,7 @@ export const ProductCard = ({ product, index, isAdded, onAddProduct }) => {
         >
             <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
                 <img
-                    src={product.img}
+                    src={product.imageUrl}
                     alt={product.nameProduct}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                 />
@@ -32,7 +32,7 @@ export const ProductCard = ({ product, index, isAdded, onAddProduct }) => {
                         </span>
                     ) : (
                         <span className="bg-emerald-500 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter shadow-lg shadow-emerald-500/30">
-                            Stock: {product.quantity} uds
+                            Stock: {product.stock} uds
                         </span>
                     )}
                 </div>
@@ -42,7 +42,7 @@ export const ProductCard = ({ product, index, isAdded, onAddProduct }) => {
                 <div>
                     <div className="flex justify-between items-start mb-1">
                         <h3 className="text-xl font-bold text-slate-900 leading-tight group-hover:text-cyan-600 transition-colors line-clamp-1">
-                            {product.nameProduct}
+{product.name}
                         </h3>
                     </div>
                     {product.description && (
@@ -64,8 +64,8 @@ export const ProductCard = ({ product, index, isAdded, onAddProduct }) => {
                     </button>
                     <span className="font-bold text-slate-900 w-8 text-center">{isOutOfStock ? 0 : localQuantity}</span>
                     <button 
-                        onClick={() => setLocalQuantity(Math.min(product.quantity, localQuantity + 1))}
-                        disabled={isOutOfStock || localQuantity >= product.quantity}
+                        onClick={() => setLocalQuantity(Math.min(product.stock, localQuantity + 1))}
+                        disabled={isOutOfStock || localQuantity >= product.stock}
                         className="p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors disabled:text-slate-300 disabled:pointer-events-none"
                     >
                         <RiAddLine className="w-5 h-5" />

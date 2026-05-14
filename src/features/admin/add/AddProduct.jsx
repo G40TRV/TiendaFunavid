@@ -1,48 +1,63 @@
 import React, { useState } from 'react';
 import { RiAddLine, RiImageAddLine, RiPriceTag3Line, RiFileTextLine } from '@remixicon/react';
+import { API_ENDPOINTS } from '../../../shared/api';
+import { auth } from '../../../shared/auth';
 
 export const AddProduct = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [successMsg, setSuccessMsg] = useState("");
+    const [productImage, setProductImage] = useState(null);
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setProductImage(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
-        
+
         const form = e.target;
         const formData = new FormData(form);
         const newProduct = {
-            id: Date.now().toString(), // Generamos un ID simple
-            nameProduct: formData.get("nameProduct"),
+            name: formData.get("name"),
             description: formData.get("description"),
             price: Number(formData.get("price")),
-            quantity: Number(formData.get("quantity")),
-            img: formData.get("img")
+            imageUrl: productImage || formData.get("imageUrl") || '',
+            stock: Number(formData.get("stock"))
         };
 
         try {
-            const response = await fetch("http://localhost:3001/products", {
+            const response = await fetch(API_ENDPOINTS.PRODUCTS.LIST, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    ...auth.getAuthHeader()
                 },
                 body: JSON.stringify(newProduct),
             });
 
             if (response.ok) {
-                setSuccessMsg("Â¡Producto agregado exitosamente!");
-                form.reset(); // Limpiar formulario
+                setSuccessMsg("¡Producto agregado exitosamente!");
+                form.reset();
+                setProductImage(null);
                 setTimeout(() => setSuccessMsg(""), 3000);
             } else {
                 console.error("Error al guardar el producto");
             }
         } catch (error) {
-            console.error("Error de conexiÃ³n:", error);
+            console.error("Error de conexión:", error);
         } finally {
             setIsSubmitting(false);
         }
     };
-    // renderizado del formulario
+
     return (
         <main className='min-h-screen pt-28 bg-slate-50 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-100/50 via-slate-50 to-slate-50 p-6 sm:p-10 font-sans text-slate-900'>
             <div className="max-w-3xl mx-auto">
@@ -50,7 +65,7 @@ export const AddProduct = () => {
                     <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 drop-shadow-sm">
                         Agregar Nuevo Producto
                     </h1>
-                    <p className="text-slate-500 font-medium">AÃ±ade nuevos artÃ­culos al catÃ¡logo de la tienda.</p>
+                    <p className="text-slate-500 font-medium">Añade nuevos artículos al catálogo de la tienda.</p>
                 </div>
 
                 <div className="bg-white border border-slate-200 rounded-3xl p-8 shadow-xl animate-in fade-in zoom-in-95 duration-500">
@@ -60,28 +75,25 @@ export const AddProduct = () => {
                         </div>
                     )}
 
-                    {/* formulario para agregar producto */}
                     <form onSubmit={handleSubmit} className="space-y-6">
-                        {/*Input del nombre del producto */}
                         <div>
                             <label className="block text-sm font-semibold text-slate-700 mb-2">Nombre del Producto</label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                                     <RiFileTextLine className="h-5 w-5 text-slate-400" />
                                 </div>
-                                <input type="text" name="nameProduct" required className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-colors placeholder:text-slate-400" placeholder="Ej: Tensiómetro de brazo" />
+                                <input type="text" name="name" required className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-colors placeholder:text-slate-400" placeholder="Ej: Tensiómetro de brazo" />
                             </div>
                         </div>
 
-                        {/*Input de descripción del producto */}
                         <div>
                             <label className="block text-sm font-semibold text-slate-700 mb-2">Descripción</label>
                             <textarea name="description" rows="3" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-colors resize-none placeholder:text-slate-400" placeholder="Breve descripción del producto..."></textarea>
                         </div>
-                        {/*Input del precio del producto*/}
+
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                {/*Input del precio del producto */}
+                                <label className="block text-sm font-semibold text-slate-700 mb-2">Precio</label>
                                 <div className="relative">
                                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                                         <RiPriceTag3Line className="h-5 w-5 text-slate-400" />
@@ -90,25 +102,46 @@ export const AddProduct = () => {
                                 </div>
                             </div>
 
-                            {/*Input de la cantidad del producto*/}
                             <div>
                                 <label className="block text-sm font-semibold text-slate-700 mb-2">Cantidad Inicial</label>
-                                <input type="number" name="quantity" required min="1" defaultValue="1" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-colors" />
+                                <input type="number" name="stock" required min="1" defaultValue="1" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-colors" />
                             </div>
                         </div>
-                        {/* url de la imagen*/}
+
                         <div>
-                            <label className="block text-sm font-semibold text-slate-700 mb-2">URL de la Imagen</label>
-                            <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                    <RiImageAddLine className="h-5 w-5 text-slate-400" />
+                            <label className="block text-sm font-semibold text-slate-700 mb-2">Imagen del Producto</label>
+                            <div className="flex flex-col gap-4">
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <RiImageAddLine className="h-5 w-5 text-slate-400" />
+                                    </div>
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={handleFileChange}
+                                        className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/50 file:hidden cursor-pointer"
+                                    />
+                                    <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-xs font-bold text-blue-600 uppercase">
+                                        Seleccionar archivo
+                                    </div>
                                 </div>
-                                <input type="url" name="img" required className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-colors placeholder:text-slate-400" placeholder="https://ejemplo.com/imagen.jpg" />
+
+                                {productImage && (
+                                    <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-slate-200 bg-slate-50">
+                                        <img src={productImage} alt="Vista previa" className="w-full h-full object-cover" />
+                                        <button
+                                            type="button"
+                                            onClick={() => setProductImage(null)}
+                                            className="absolute top-2 right-2 p-1.5 bg-rose-500 text-white rounded-full shadow-lg hover:bg-rose-600 transition-colors"
+                                        >
+                                            ×
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         </div>
 
                         <div className="pt-4">
-                            {/* boton de guardar producto*/}
                             <button
                                 type="submit"
                                 disabled={isSubmitting}
@@ -119,7 +152,7 @@ export const AddProduct = () => {
                                 ) : (
                                     <>
                                         <RiAddLine className="w-6 h-6" />
-                                        Agregar Producto al CatÃ¡logo
+                                        Agregar Producto al Catálogo
                                     </>
                                 )}
                             </button>

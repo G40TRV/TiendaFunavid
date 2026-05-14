@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { API_ENDPOINTS } from '../../../shared/api';
+import { auth } from '../../../shared/auth';
 
 export const useProductManagement = () => {
     const [products, setProducts] = useState([]);
@@ -7,14 +9,13 @@ export const useProductManagement = () => {
     const [editFormData, setEditFormData] = useState({});
     const [notification, setNotification] = useState({ message: "", type: "" });
 
-    // Cargar productos al iniciar
     useEffect(() => {
         fetchProducts();
     }, []);
 
     const fetchProducts = async () => {
         try {
-            const response = await fetch("http://localhost:3001/products");
+            const response = await fetch(API_ENDPOINTS.PRODUCTS.LIST);
             const data = await response.json();
             setProducts(data);
         } catch (error) {
@@ -30,11 +31,12 @@ export const useProductManagement = () => {
     };
 
     const handleDelete = async (id) => {
-        if (!window.confirm("Â¿EstÃ¡s seguro de que deseas eliminar este producto?")) return;
+        if (!window.confirm("¿Estás seguro de que deseas eliminar este producto?")) return;
 
         try {
-            const response = await fetch(`http://localhost:3001/products/${id}`, {
+            const response = await fetch(API_ENDPOINTS.PRODUCTS.BY_ID(id), {
                 method: "DELETE",
+                headers: auth.getAuthHeader()
             });
 
             if (response.ok) {
@@ -44,20 +46,26 @@ export const useProductManagement = () => {
                 showNotification("Error al eliminar el producto", "error");
             }
         } catch (error) {
-            showNotification("Error de conexiÃ³n", "error");
+            showNotification("Error de conexión", "error");
         }
     };
 
     const handleEditClick = (product) => {
         setEditingId(product.id);
-        setEditFormData({ ...product });
+        setEditFormData({
+            name: product.name,
+            description: product.description,
+            price: product.price,
+            stock: product.stock,
+            imageUrl: product.imageUrl
+        });
     };
 
     const handleEditChange = (e) => {
         const { name, value } = e.target;
         setEditFormData({
             ...editFormData,
-            [name]: name === "price" || name === "quantity" ? Number(value) : value
+            [name]: name === "price" || name === "stock" ? Number(value) : value
         });
     };
 
@@ -66,7 +74,7 @@ export const useProductManagement = () => {
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                setEditFormData(prev => ({ ...prev, img: reader.result }));
+                setEditFormData(prev => ({ ...prev, imageUrl: reader.result }));
             };
             reader.readAsDataURL(file);
         }
@@ -74,21 +82,27 @@ export const useProductManagement = () => {
 
     const handleSaveEdit = async () => {
         try {
-            const response = await fetch(`http://localhost:3001/products/${editingId}`, {
+            const response = await fetch(API_ENDPOINTS.PRODUCTS.BY_ID(editingId), {
                 method: "PUT",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    ...auth.getAuthHeader()
+                },
                 body: JSON.stringify(editFormData),
             });
 
             if (response.ok) {
-                setProducts(products.map(p => p.id === editingId ? editFormData : p));
+                const updatedProducts = products.map(p =>
+                    p.id === editingId ? { ...p, ...editFormData } : p
+                );
+                setProducts(updatedProducts);
                 setEditingId(null);
                 showNotification("Producto actualizado correctamente", "success");
             } else {
                 showNotification("Error al actualizar el producto", "error");
             }
         } catch (error) {
-            showNotification("Error de conexiÃ³n", "error");
+            showNotification("Error de conexión", "error");
         }
     };
 
@@ -102,11 +116,11 @@ export const useProductManagement = () => {
         editingId,
         editFormData,
         notification,
-        fetchProducts, // Para refrescar la lista
+        fetchProducts,
         handleDelete,
         handleEditClick,
         handleEditChange,
-        handleEditImageChange, // Nueva funciÃ³n
+        handleEditImageChange,
         handleSaveEdit,
         cancelEdit
     };
